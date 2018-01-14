@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  exporter:
+    build: .
+    image: anroots/huawei-4g-exporter
+    ports:
+      - "8080:8080"
+    environment:
+      - HUAWEI_GW_IP
+      - HUAWEI_GW_USERNAME=admin
+      - HUAWEI_GW_PASSWORD

@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - "9"
+sudo: required
+services:
+  - docker
+
+before_script:
+  - npm install
+  - node_modules/.bin/eslint src
+
+script:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH | tr / - ; fi`
+  - docker build -t anroots/huawei-4g-exporter:$TAG .
+  - docker push anroots/huawei-4g-exporter:$TAG
+  - docker rmi anroots/huawei-4g-exporter:$TAG
+
+after_script:
+  - docker logout
+
+notifications:
+  email:
+    recipients:
+      - alert@westfall.sqroot.eu
