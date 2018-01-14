@@ -28,7 +28,6 @@ class Metrics {
         if (error) {
           reject(error)
         }
-
         const g = new Gauge({
           name: 'huawei_wifi_enable',
           help: 'Is the WiFi AP enabled?',
@@ -48,17 +47,15 @@ class Metrics {
           reject(error)
         }
 
-        const download = new Gauge({
-          name: 'huawei_traffic_month_download',
-          help: 'Number of bytes downloaded in the current billing month'
-        })
-        const upload = new Gauge({
-          name: 'huawei_traffic_month_upload',
-          help: 'Number of bytes uploaded in the current billing month'
+        const traffic = new Gauge({
+          name: 'huawei_traffic_month',
+          help: 'Number of bytes transmitted in the current billing month',
+          labelNames: ['direction']
         })
 
-        download.set(Metrics.asInt(response.CurrentMonthDownload))
-        upload.set(Metrics.asInt(response.CurrentMonthUpload))
+        traffic.set({direction: 'download'}, Metrics.asInt(response.CurrentMonthDownload))
+        traffic.set({direction: 'upload'}, Metrics.asInt(response.CurrentMonthUpload))
+
         resolve()
       })
     })
@@ -112,9 +109,24 @@ class Metrics {
 
         const wifiUser = new Gauge({
           name: 'huawei_status_wifi_user',
-          help: 'Number of connected WiFi users'
+          help: 'Number of connected WiFi users',
+          labelNames: ['type']
         })
-        wifiUser.set(Metrics.asInt(response.CurrentWifiUser))
+        wifiUser.set({type: 'current'}, Metrics.asInt(response.CurrentWifiUser))
+        wifiUser.set({type: 'max'}, Metrics.asInt(response.TotalWifiUser))
+
+        const voiceBusy = new Gauge({
+          name: 'huawei_status_voice_busy',
+          help: 'Is there an active voice connection'
+        })
+        voiceBusy.set(Metrics.asInt(response.voice_busy))
+
+        const serviceStatus = new Gauge({
+          name: 'huawei_status_service',
+          help: 'Status of the Huawei API service (?)',
+          labelNames: ['wan_ip']
+        })
+        serviceStatus.set({wan_ip: response.WanIPAddress[0]}, Metrics.asInt(response.ServiceStatus))
 
         resolve()
       })
@@ -128,11 +140,23 @@ class Metrics {
           reject(error)
         }
 
-        const currentUpload = new Gauge({
-          name: 'huawei_traffic_current_upload',
-          help: 'Number of bytes uploaded'
+        const currentTraffic = new Gauge({
+          name: 'huawei_traffic_current',
+          help: 'Number of bytes transmitted',
+          labelNames: ['direction']
         })
-        currentUpload.set(Metrics.asInt(response.CurrentUpload))
+
+        currentTraffic.set({direction: 'upload'}, Metrics.asInt(response.CurrentUpload))
+        currentTraffic.set({direction: 'download'}, Metrics.asInt(response.CurrentDownload))
+
+        const totalTraffic = new Gauge({
+          name: 'huawei_traffic_total',
+          help: 'Total number of bytes transmitted',
+          labelNames: ['direction']
+        })
+
+        totalTraffic.set({direction: 'upload'}, Metrics.asInt(response.TotalUpload))
+        totalTraffic.set({direction: 'download'}, Metrics.asInt(response.TotalDownload))
 
         resolve()
       })

@@ -2,7 +2,8 @@
 
 A [Prometheus](https://prometheus.io) exporter for Huawei 4G routers (B315).
 
-*This is a work-in-progress and not complete. Pull requests with helpful contributions are very welcome.*
+*This is a work-in-progress and not complete. Code interface and reported metric naming and structure can change at any time.
+Pull requests with helpful contributions are very welcome.*
 
 ## Configuration
 
