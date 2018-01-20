@@ -22,6 +22,7 @@ The following environment variables can be set.
 HUAWEI_GW_PASSWORD='admin' HUAWEI_GW_USERNAME='admin' HUAWEI_GW_IP='192.168.1.2' docker-compose up
 
 # Natively
+npm install
 HUAWEI_GW_PASSWORD='admin' HUAWEI_GW_USERNAME='admin' HUAWEI_GW_IP='192.168.1.2' node src/export.js
 ```
 
