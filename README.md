@@ -17,13 +17,25 @@ The following environment variables can be set.
 
 ## Running
 
+### Docker
+
 ```bash
-# Using Docker Compose
+# With Docker Compose
 HUAWEI_GW_PASSWORD='admin' HUAWEI_GW_USERNAME='admin' HUAWEI_GW_IP='192.168.1.2' docker-compose up
 
-# Natively
-npm install
-HUAWEI_GW_PASSWORD='admin' HUAWEI_GW_USERNAME='admin' HUAWEI_GW_IP='192.168.1.2' node src/export.js
+# With Docker
+docker run -p 8080:8080 -e HUAWEI_GW_IP=192.168.1.1 -e HUAWEI_GW_USERNAME=admin -e HUAWEI_GW_PASSWORD=admin --name=huawei-4g-exporter --rm -d anroots/huawei-4g-exporter
+```
+
+### Natively
+
+```bash
+wget https://github.com/anroots/huawei-4g-exporter/archive/master.zip && \
+	unzip master.zip && \
+	rm -f master.zip && \
+	cd huawei-4g-exporter-master && \
+	npm install && \
+	HUAWEI_GW_PASSWORD='admin' HUAWEI_GW_USERNAME='admin' HUAWEI_GW_IP='192.168.1.2' node src/export.js
 ```
 
 Metrics can be read from `http://SERVER_HOST:SERVER_PORT/metrics` endpoint.
