@@ -4,12 +4,13 @@ const express = require('express')
 const server = express()
 const register = require('prom-client').register
 const prom = require('prom-client')
+const util = require('util')
 
 const Metrics = require('./metrics.js')
 
 // Configuration options via environment variables
 const HUAWEI_GW_IP = process.env.HUAWEI_GW_IP
-const HUAWEI_GW_USERNAME = process.env.HUAWEI_GW_USERNAME
+const HUAWEI_GW_USERNAME = process.env.HUAWEI_GW_USERNAME || 'admin'
 const HUAWEI_GW_PASSWORD = process.env.HUAWEI_GW_PASSWORD
 const SERVER_PORT = process.env.SERVER_PORT || 8080
 const SERVER_HOST = process.env.SERVER_HOST || '0.0.0.0'
@@ -18,6 +19,14 @@ if (!HUAWEI_GW_IP || !HUAWEI_GW_USERNAME || !HUAWEI_GW_PASSWORD) {
   console.error('You need to specify HUAWEI_GW_IP, HUAWEI_GW_USERNAME and HUAWEI_GW_PASSWORD environment variables!')
   process.exit(1)
 }
+
+console.info('Starting huawei-4g-exporter')
+console.info(util.format(
+  'Running config: HUAWEI_GW_IP=%s; HUAWEI_GW_USERNAME=%s; HUAWEI_GW_PASSWORD=%s',
+  HUAWEI_GW_IP,
+  HUAWEI_GW_USERNAME,
+  HUAWEI_GW_PASSWORD.replace(/./g, '*')
+))
 
 let router = require('dialog-router-api').create({
   gateway: HUAWEI_GW_IP
@@ -35,7 +44,7 @@ router.getToken(function (error, routerToken) {
 
   router.login(routerToken, HUAWEI_GW_USERNAME, HUAWEI_GW_PASSWORD, function (error, loginResponse) {
     if (error || loginResponse !== 'OK') {
-      console.error('Unable to authenticate to the router')
+      console.error('Unable to authenticate to the router, check router IP and credentials.')
       process.exit(1)
     }
 
@@ -71,5 +80,5 @@ server.get('/metrics', function (req, res) {
   Promise.all(metrics).then(() => res.end(register.metrics()))
 })
 
-console.log('Server listening on ' + SERVER_HOST + ':' + SERVER_PORT + ', metrics exposed on /metrics endpoint')
+console.log(util.format('Server listening on %s:%s, metrics exposed on /metrics endpoint', SERVER_HOST, SERVER_PORT))
 server.listen(SERVER_PORT, SERVER_HOST)
