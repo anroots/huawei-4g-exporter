@@ -63,7 +63,12 @@ function collectMetrics () {
   prom.register.setDefaultLabels(defaultLabels)
 
   let metrics = new Metrics(token, router)
-  return metrics.fetchAll()
+
+  try {
+    return metrics.fetchAll()
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 server.get('/metrics', function (req, res) {
