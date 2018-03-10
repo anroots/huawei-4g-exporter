@@ -45,6 +45,7 @@ router.getToken(function (error, routerToken) {
   router.login(routerToken, HUAWEI_GW_USERNAME, HUAWEI_GW_PASSWORD, function (error, loginResponse) {
     if (error || loginResponse !== 'OK') {
       console.error('Unable to authenticate to the router, check router IP and credentials.')
+      console.error(error)
       process.exit(1)
     }
 
