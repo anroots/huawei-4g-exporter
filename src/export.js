@@ -11,7 +11,7 @@ const Metrics = require('./metrics.js')
 // Configuration options via environment variables
 const HUAWEI_GW_IP = process.env.HUAWEI_GW_IP
 const HUAWEI_GW_USERNAME = process.env.HUAWEI_GW_USERNAME || 'admin'
-const HUAWEI_GW_PASSWORD = process.env.HUAWEI_GW_PASSWORD
+const HUAWEI_GW_PASSWORD = process.env.HUAWEI_GW_PASSWORD.trim()
 const SERVER_PORT = process.env.SERVER_PORT || 8080
 const SERVER_HOST = process.env.SERVER_HOST || '0.0.0.0'
 
