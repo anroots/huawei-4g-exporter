@@ -9,7 +9,7 @@ class Metrics {
   }
 
   static asInt (property) {
-    return parseInt(property[0])
+    return parseInt(property[0]) || -1
   }
 
   fetchAll () {
@@ -91,6 +91,7 @@ class Metrics {
         let matches = response.rssi[0].match(/(\d+)/)
         rssi.set(parseInt(parseInt(matches[1])))
 
+        sinr.set(Metrics.asInt(response.sinr))
         sinr.set(Metrics.asInt(response.sinr))
         rsrp.set(Metrics.asInt(response.rsrp))
         rsrq.set(Metrics.asInt(response.rsrq))

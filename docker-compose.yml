@@ -6,6 +6,8 @@ services:
     image: anroots/huawei-4g-exporter
     ports:
       - "8080:8080"
+    volumes:
+      - ./src:/opt/huawei-4g-exporter/src:ro
     environment:
       - HUAWEI_GW_IP
       - HUAWEI_GW_USERNAME=admin
